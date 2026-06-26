@@ -246,10 +246,9 @@
                 <!-- Área de Scroll -->
                 <div class="flex-1 overflow-x-auto overflow-y-hidden scroll-behavior-smooth flex gap-4 p-2 shelf-scroll scroll-snap-type-x" id="shelfScroll">
 
-                    <!-- PRATELEIRA 1 - Livros em destaque -->
+                    <!-- PRATELEIRA 1 -->
                     <div class="flex-shrink-0 w-full bg-amber-50 rounded-2xl p-3 sm:p-4 border-4 border-amber-200 flex flex-col relative min-h-[240px]">
                         <div class="book-grid grid flex-1 mb-3">
-                            <!-- Cada livro agora é uma "capa" com estilo realista -->
                             <a href="https://share.gemini.google/B2t0EWLHgki1" target="_blank" 
                                class="book-cover bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-lg p-3 flex flex-col justify-between text-white text-center cursor-pointer h-44 relative overflow-hidden"
                                data-audio="A Sinfonia do Silêncio de Ferro. Escrito por Everton José Batista da Silva.">
@@ -294,7 +293,6 @@
                                 </div>
                             </a>
                         </div>
-                        <!-- Prateleira de Madeira -->
                         <div class="wood-shelf h-4 w-full"></div>
                     </div>
 
@@ -448,7 +446,7 @@
                         <div class="wood-shelf h-4 w-full"></div>
                     </div>
 
-                    <!-- PRATELEIRA 5 - com espaços para novos livros -->
+                    <!-- PRATELEIRA 5 -->
                     <div class="flex-shrink-0 w-full bg-amber-50 rounded-2xl p-3 sm:p-4 border-4 border-amber-200 flex flex-col relative min-h-[240px]">
                         <div class="book-grid grid flex-1 mb-3">
                             <a href="https://gemini.google.com/share/7eddb04cd450" target="_blank" 
@@ -484,7 +482,6 @@
                                 </div>
                             </a>
 
-                            <!-- Espaço para novo livro -->
                             <div class="bg-amber-100/30 rounded-lg p-3 flex flex-col justify-center items-center text-amber-900/30 border-3 border-dashed border-amber-300 h-44 select-none backdrop-blur-sm">
                                 <span class="text-3xl">📖</span>
                                 <span class="text-[8px] mt-2 font-semibold text-center leading-none">Em breve<br>novos livros!</span>
@@ -529,19 +526,20 @@
     </div>
 
     <script>
-        // 1. CARROSSEL DE PRATELEIRAS
+        // ===== CARROSSEL DE PRATELEIRAS - CORRIGIDO =====
         const scrollContainer = document.getElementById('shelfScroll');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const indicator = document.getElementById('pageIndicator');
         let currentPage = 0;
-        let totalPages = 5;
+        let totalPages = 5; // Definido fixo pois temos 5 prateleiras
 
         function updateCarousel() {
-            if (scrollContainer.clientWidth === 0) return;
+            // Atualiza o total de páginas baseado nos elementos filhos
+            const shelfItems = document.querySelectorAll('#shelfScroll > div');
+            totalPages = shelfItems.length;
 
-            totalPages = document.querySelectorAll('#shelfScroll > div').length;
-
+            // Desenha os indicadores (pontinhos)
             indicator.innerHTML = '';
             for (let i = 0; i < totalPages; i++) {
                 const dot = document.createElement('div');
@@ -551,18 +549,28 @@
                 indicator.appendChild(dot);
             }
 
-            const targetScroll = currentPage * scrollContainer.clientWidth;
-            scrollContainer.scrollTo({ left: targetScroll, behavior: 'smooth' });
+            // Realiza o scroll suave para a página atual
+            if (scrollContainer.clientWidth > 0) {
+                const targetScroll = currentPage * scrollContainer.clientWidth;
+                scrollContainer.scrollTo({ left: targetScroll, behavior: 'smooth' });
+            }
 
+            // Atualiza estado dos botões
             prevBtn.disabled = currentPage === 0;
             nextBtn.disabled = currentPage >= totalPages - 1;
         }
 
         function goToPage(page) {
+            // Verifica se a página é válida
             if (page < 0 || page >= totalPages) return;
+            
             currentPage = page;
             updateCarousel();
-            speak("Prateleira " + (currentPage + 1));
+            
+            // Fala o número da prateleira (se a narração estiver ativa)
+            if (autoNarration) {
+                speak("Prateleira " + (currentPage + 1));
+            }
         }
 
         function nextPage() {
@@ -577,29 +585,57 @@
             }
         }
 
+        // Sincroniza com o scroll manual do usuário
         scrollContainer.addEventListener('scroll', () => {
             const pageWidth = scrollContainer.clientWidth;
             if (pageWidth === 0) return;
+            
             const newPage = Math.round(scrollContainer.scrollLeft / pageWidth);
             if (newPage !== currentPage && newPage < totalPages) {
                 currentPage = newPage;
-                updateCarousel();
+                // Atualiza apenas os indicadores e botões, sem scroll forçado
+                updateIndicatorsAndButtons();
             }
         });
 
+        // Função auxiliar para atualizar apenas indicadores e botões
+        function updateIndicatorsAndButtons() {
+            // Atualiza os indicadores
+            const dots = indicator.querySelectorAll('div');
+            dots.forEach((dot, index) => {
+                dot.className = 'w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full border border-amber-300 transition-all cursor-pointer ' +
+                                (index === currentPage ? 'bg-amber-500 scale-125 shadow-sm' : 'bg-amber-100');
+            });
+
+            // Atualiza botões
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage >= totalPages - 1;
+        }
+
+        // Evento de redimensionamento
         let resizeTimeout;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(updateCarousel, 150);
+            resizeTimeout = setTimeout(() => {
+                // Recalcula a posição atual baseada no scroll
+                const pageWidth = scrollContainer.clientWidth;
+                if (pageWidth > 0) {
+                    const newPage = Math.round(scrollContainer.scrollLeft / pageWidth);
+                    if (newPage !== currentPage && newPage < totalPages) {
+                        currentPage = newPage;
+                        updateIndicatorsAndButtons();
+                    }
+                }
+            }, 150);
         });
 
-        // 2. SISTEMA DE LEITURA ATIVA
+        // ===== SISTEMA DE LEITURA ATIVA =====
         let autoNarration = true;
         let isAudioUnlocked = true;
         let isSpeaking = false;
 
         function speak(text) {
-            if (!isAudioUnlocked) return;
+            if (!isAudioUnlocked || !autoNarration) return;
             try {
                 if (!window.speechSynthesis) return;
 
@@ -658,7 +694,7 @@
             }
         }
 
-        // 3. MÚSICA DE FUNDO
+        // ===== MÚSICA DE FUNDO =====
         let audioCtx = null;
         let isMusicPlaying = false;
         let melodyTimeout = null;
@@ -750,7 +786,7 @@
             playNext();
         }
 
-        // 4. ELEMENTOS FLUTUANTES
+        // ===== ELEMENTOS FLUTUANTES =====
         function criarElementosFlutuantes() {
             const container = document.getElementById('elementos-container');
             const elementos = ['📚', '🎈', '✨', '⭐', '🦁', '🍎', '🏖️', '🍭'];
@@ -772,7 +808,7 @@
             setInterval(adicionarElemento, 3200);
         }
 
-        // 5. CONFIGURAR LIVROS
+        // ===== CONFIGURAR LIVROS =====
         function configurarLivros() {
             const livros = document.querySelectorAll('.book-cover');
 
@@ -802,17 +838,28 @@
             });
         }
 
-        // 6. INICIALIZAÇÃO
+        // ===== INICIALIZAÇÃO =====
         window.onload = function() {
             criarElementosFlutuantes();
             configurarLivros();
 
+            // Aguarda um pequeno delay para garantir que o layout esteja pronto
             setTimeout(() => {
+                // Define o total de páginas
+                totalPages = document.querySelectorAll('#shelfScroll > div').length;
+                currentPage = 0;
                 updateCarousel();
-                speak("Bem-vindo ao Reino da Leitura, Emerson! Toque nos livros para começar a ler.");
+                
+                // Mensagem de boas-vindas
+                setTimeout(() => {
+                    speak("Bem-vindo ao Reino da Leitura, Emerson! Toque nos livros para começar a ler.");
+                }, 500);
+                
+                // Inicia a música
                 toggleBackgroundMusic();
-            }, 500);
+            }, 300);
 
+            // Libera o áudio após interação do usuário
             const unlockHandler = () => {
                 isAudioUnlocked = true;
                 if (audioCtx && audioCtx.state === 'suspended') {
