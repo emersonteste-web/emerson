@@ -1,692 +1,398 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-    <title>📚 Reino da Leitura - Estante Mágica</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>📚 Reino da Leitura com Cuquim! - Emerson @2024</title>
+    
+    <!-- Google Fonts unificadas com o slide principal -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Nunito:wght@400;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        comfortaa: ['Comfortaa', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
     <style>
-        :root {
-            --ouro-real: #d4a843;
-            --ouro-escuro: #b8860b;
-            --roxo-magia: #6b2d8e;
-            --verde-dragao: #2d8e5f;
-            --verde-escuro: #1a5c3a;
-            --dourado-branco: #fff8f0;
-            --noite-top: #0a0f24;
-            --noite-mid: #192752;
-            --noite-bottom: #27356a;
-            --fogo: #ff6b35;
-            --tesouro: #f5c64a;
-            --tesouro-escuro: #b9852f;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         body {
-            font-family: 'Nunito', sans-serif;
-            background: linear-gradient(180deg, var(--noite-top) 0%, var(--noite-mid) 55%, var(--noite-bottom) 100%);
-            color: var(--dourado-branco);
-            height: 100vh;
-            height: 100dvh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            position: relative;
+            background: radial-gradient(circle, #fff3dd 0%, #ffd54f 100%);
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
-        /* Estrelas cintilantes */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            background:
-                radial-gradient(2px 2px at 15% 25%, #fff, transparent),
-                radial-gradient(2px 2px at 35% 55%, rgba(255,200,100,0.8), transparent),
-                radial-gradient(1px 1px at 55% 15%, #fff, transparent),
-                radial-gradient(2px 2px at 75% 45%, rgba(255,180,100,0.6), transparent),
-                radial-gradient(1px 1px at 85% 75%, #fff, transparent),
-                radial-gradient(2px 2px at 25% 85%, rgba(255,200,100,0.7), transparent),
-                radial-gradient(1px 1px at 65% 95%, #fff, transparent),
-                radial-gradient(2px 2px at 45% 35%, rgba(255,180,100,0.5), transparent),
-                radial-gradient(1px 1px at 95% 35%, #fff, transparent),
-                radial-gradient(2px 2px at 5% 65%, rgba(255,200,100,0.6), transparent);
-            background-size: 100% 100%;
-            animation: cintilarEstrelas 3s ease-in-out infinite alternate;
+        /* Animação de entrada suave */
+        .slide-animation {
+            animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        @keyframes cintilarEstrelas {
-            0% { opacity: 0.5; }
-            100% { opacity: 1; }
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.95) translateY(8px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* Elementos flutuantes */
+        /* Sombra estilo cartoon fofa */
+        .cartoon-shadow {
+            box-shadow: 0 8px 0px 0px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cartoon-button-green {
+            box-shadow: 0 5px 0px 0px #15803d;
+        }
+        .cartoon-button-green:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0px 0px #15803d;
+        }
+
+        .cartoon-button-sky {
+            box-shadow: 0 5px 0px 0px #0369a1;
+        }
+        .cartoon-button-sky:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0px 0px #0369a1;
+        }
+
+        .cartoon-button-amber {
+            box-shadow: 0 5px 0px 0px #b45309;
+        }
+        .cartoon-button-amber:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0px 0px #b45309;
+        }
+
+        /* Livros fofos com efeito 3D de espinha */
+        .book-spine {
+            box-shadow: -4px 4px 0px 0px rgba(0, 0, 0, 0.15), inset 3px 0 4px rgba(255, 255, 255, 0.25);
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .book-spine:hover {
+            transform: translateY(-8px) scale(1.03) rotate(-1deg);
+            box-shadow: -6px 12px 0px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Elementos flutuantes fofos */
         .elemento-flutuante {
             position: fixed;
             pointer-events: none;
             z-index: 1;
             animation: flutuarElemento linear infinite;
-            opacity: 0.4;
+            opacity: 0.35;
         }
-        
         @keyframes flutuarElemento {
-            0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0; }
-            15% { opacity: 0.6; }
-            85% { opacity: 0.6; }
-            100% { transform: translateY(-20vh) scale(1) rotate(360deg); opacity: 0; }
+            0% { transform: translateY(100vh) scale(0.6) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.55; }
+            90% { opacity: 0.55; }
+            100% { transform: translateY(-10vh) scale(1.1) rotate(360deg); opacity: 0; }
         }
 
-        .header {
-            position: relative;
-            z-index: 50;
-            background: linear-gradient(180deg, rgba(10,15,36,0.95) 0%, rgba(10,15,36,0.8) 100%);
-            border-bottom: 2px solid var(--ouro-real);
-            backdrop-filter: blur(10px);
-            flex-shrink: 0;
-        }
-        
-        .header-inner {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .header-botoes { display: flex; gap: 10px; align-items: center; }
-
-        .btn-fullscreen {
-            background: linear-gradient(135deg, #4a148c, #6a1b9a);
-            border: 2px solid var(--ouro-real);
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            box-shadow: 0 0 10px rgba(212, 168, 67, 0.3);
-            color: white;
-        }
-        
-        .btn-fullscreen:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(212, 168, 67, 0.5);
-            background: linear-gradient(135deg, #6a1b9a, #8e24aa);
-        }
-        
-        .btn-fullscreen.ativo {
-            background: linear-gradient(135deg, var(--ouro-real), var(--ouro-escuro));
-            box-shadow: 0 0 20px rgba(212, 168, 67, 0.6);
-        }
-
-        .btn-musica {
-            background: linear-gradient(135deg, var(--verde-dragao), var(--verde-escuro));
-            border: 2px solid var(--ouro-real);
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            box-shadow: 0 0 10px rgba(212, 168, 67, 0.3);
-            color: white;
-        }
-        
-        .btn-musica:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(212, 168, 67, 0.5);
-        }
-        
-        .btn-musica.ativo {
-            background: linear-gradient(135deg, var(--ouro-real), var(--ouro-escuro));
-        }
-
-        .btn-voltar-dourado {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--ouro-real), var(--ouro-escuro));
-            border: 2px solid #fff;
-            padding: 8px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 800;
-            font-family: 'Nunito', sans-serif;
-            color: #1a0a2e;
-            text-decoration: none;
-            transition: all 0.3s;
-            box-shadow: 0 0 15px rgba(212, 168, 67, 0.4);
-            animation: brilhoDourado 1.5s ease-in-out infinite;
-        }
-        
-        .btn-voltar-dourado:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(212, 168, 67, 0.8);
-            background: linear-gradient(135deg, #e8c060, var(--ouro-real));
-        }
-        
-        @keyframes brilhoDourado {
-            0%, 100% { box-shadow: 0 0 15px rgba(212, 168, 67, 0.4); border-color: #fff; }
-            50% { box-shadow: 0 0 30px rgba(212, 168, 67, 0.8); border-color: #ffe6a3; }
-        }
-
-        /* Container principal */
-        .container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            z-index: 10;
-            padding: 15px 20px 5px 20px;
-            overflow: hidden;
-        }
-
-        /* Títulos */
-        .titulo-reino {
-            font-family: 'Cinzel Decorative', cursive;
-            font-size: clamp(24px, 5vw, 36px);
-            color: var(--ouro-real);
-            text-shadow: 0 0 15px rgba(245,198,74,0.5), 2px 2px 4px rgba(0,0,0,0.5);
-            text-align: center;
-            margin-bottom: 5px;
-            flex-shrink: 0;
-        }
-        
-        .subtitulo-magico {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(14px, 3vw, 20px);
-            color: rgba(255, 255, 255, 0.8);
-            text-align: center;
-            margin-bottom: 12px;
-            flex-shrink: 0;
-        }
-
-        /* Banner */
-        .banner-leitura {
-            border-radius: 20px;
-            overflow: hidden;
-            border: 3px solid var(--ouro-real);
-            width: 85%;
-            max-width: 280px;
-            margin: 0 auto 12px;
-            aspect-ratio: 16/10;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(212, 168, 67, 0.2);
-            position: relative;
-            background: linear-gradient(135deg, var(--roxo-magia), var(--noite-mid));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        
-        .banner-leitura .emoji-banner {
-            font-size: 56px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-        }
-        
-        .banner-leitura::after {
-            content: "📚";
-            position: absolute;
-            bottom: -15px;
-            right: -10px;
-            font-size: 30px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
-
-        /* ===== CARROSSEL DE LIVROS ===== */
-        .carousel-wrapper {
-            flex: 1;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            min-height: 0;
-            overflow: hidden;
-        }
-
-        /* Botões de navegação */
-        .nav-btn {
-            flex-shrink: 0;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 2px solid var(--ouro-real);
-            background: rgba(10,15,36,0.85);
-            backdrop-filter: blur(8px);
-            color: var(--ouro-real);
-            font-size: 22px;
-            cursor: pointer;
-            transition: all 0.3s;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 15px rgba(212,168,67,0.3);
-        }
-
-        .nav-btn:hover {
-            transform: scale(1.1);
-            background: rgba(212,168,67,0.3);
-            box-shadow: 0 0 25px rgba(212,168,67,0.5);
-        }
-
-        .nav-btn:active {
-            transform: scale(0.9);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        /* Container dos livros (scroll horizontal) */
-        .shelf-scroll {
-            flex: 1;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-behavior: smooth;
-            display: flex;
-            gap: 20px;
-            padding: 10px 5px;
-            min-height: 0;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-        }
-
+        /* Custom scrollbar para a prateleira */
         .shelf-scroll::-webkit-scrollbar {
             height: 6px;
         }
-
         .shelf-scroll::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
+            background: rgba(251, 191, 36, 0.15);
+            border-radius: 9999px;
         }
-
         .shelf-scroll::-webkit-scrollbar-thumb {
-            background: var(--ouro-real);
-            border-radius: 10px;
-        }
-
-        .shelf-scroll::-webkit-scrollbar-thumb:hover {
-            background: var(--ouro-escuro);
-        }
-
-        /* Estante (background fixo) */
-        .shelf {
-            flex-shrink: 0;
-            width: 100%;
-            background: linear-gradient(to bottom, #d2a679, var(--ouro-escuro));
-            border-bottom: 14px solid var(--ouro-escuro);
-            border-radius: 8px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 20px;
-            padding: 20px 20px 8px 20px;
-            min-height: 200px;
-            position: relative;
-            scroll-snap-align: start;
-        }
-
-        .shelf::after {
-            content: '';
-            position: absolute;
-            bottom: -22px;
-            left: 5%;
-            width: 90%;
-            height: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 50%;
-            filter: blur(5px);
-            z-index: -1;
-        }
-
-        /* Livros */
-        .book-spine {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            height: 170px;
-            border-radius: 5px 8px 8px 5px;
-            padding: 12px 8px;
-            text-align: center;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            font-size: 0.75rem;
-            transition: all 0.3s ease;
-            box-shadow: -5px 5px 10px rgba(0,0,0,0.3), inset 4px 0 6px rgba(255,255,255,0.2);
-            border-left: 4px solid rgba(0,0,0,0.15);
-            cursor: pointer;
-            position: relative;
-            transform-origin: bottom center;
-            min-width: 0;
-        }
-
-        .book-spine:hover {
-            transform: translateY(-12px) scale(1.04) rotate(-2deg);
-            box-shadow: -8px 15px 25px rgba(0,0,0,0.4);
-            z-index: 10;
-            border-color: var(--ouro-real);
-        }
-
-        .book-spine:active {
-            transform: scale(0.95);
-        }
-
-        .book-title {
-            display: -webkit-box;
-            -webkit-line-clamp: 4;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            line-height: 1.2;
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-            font-family: 'Nunito', sans-serif;
-            font-weight: 800;
-        }
-
-        .book-author {
-            font-size: 0.6rem;
-            opacity: 0.9;
-            background: rgba(0,0,0,0.2);
-            padding: 2px 6px;
-            border-radius: 4px;
-            width: 90%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-family: 'Nunito', sans-serif;
-        }
-
-        /* Cores dos livros */
-        .color-1 { background: linear-gradient(145deg, #FF6B6B, #e05555); }
-        .color-2 { background: linear-gradient(145deg, #4D96FF, #3a7ad4); }
-        .color-3 { background: linear-gradient(145deg, #6BCB77, #52a85e); }
-        .color-4 { background: linear-gradient(145deg, #FFA1A1, #e08080); }
-        .color-5 { background: linear-gradient(145deg, #9B5DE5, #7d44b8); }
-        .color-6 { background: linear-gradient(145deg, #F15BB5, #c94a94); }
-        .color-7 { background: linear-gradient(145deg, #00BBF9, #0098cc); }
-        .color-8 { background: linear-gradient(145deg, #00F5D4, #00c9ae); }
-        .color-9 { background: linear-gradient(145deg, #FFB703, #d49a02); }
-        .color-10 { background: linear-gradient(145deg, #FB8500, #cc6e00); }
-        .color-11 { background: linear-gradient(145deg, #E040FB, #aa00c0); }
-
-        /* Indicador de páginas */
-        .page-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 8px 0;
-            flex-shrink: 0;
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(212,168,67,0.3);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .dot.active {
-            background: var(--ouro-real);
-            border-color: #fff;
-            transform: scale(1.2);
-            box-shadow: 0 0 15px rgba(212,168,67,0.5);
-        }
-
-        .dot:hover {
-            transform: scale(1.1);
-        }
-
-        /* Decoração */
-        .decoracao {
-            text-align: center;
-            font-size: 16px;
-            opacity: 0.3;
-            letter-spacing: 8px;
-            flex-shrink: 0;
-        }
-
-        /* Responsivo */
-        @media (max-width: 768px) {
-            .shelf {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 15px;
-                padding: 15px 15px 6px 15px;
-                min-height: 160px;
-            }
-            .book-spine { height: 150px; }
-            .book-title { font-size: 0.65rem; }
-            .book-author { font-size: 0.55rem; }
-            .nav-btn { width: 36px; height: 36px; font-size: 18px; }
-            .banner-leitura { max-width: 220px; }
-            .banner-leitura .emoji-banner { font-size: 42px; }
-        }
-
-        @media (max-width: 480px) {
-            .shelf {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 12px;
-                padding: 12px 12px 5px 12px;
-                min-height: 130px;
-            }
-            .book-spine { height: 120px; padding: 10px 6px; }
-            .book-title { font-size: 0.55rem; }
-            .book-author { font-size: 0.5rem; padding: 1px 4px; }
-            .container { padding: 10px 10px 3px 10px; }
-            .titulo-reino { font-size: 20px; }
-            .subtitulo-magico { font-size: 12px; margin-bottom: 8px; }
-            .nav-btn { width: 30px; height: 30px; font-size: 14px; }
-            .banner-leitura { max-width: 180px; }
-            .banner-leitura .emoji-banner { font-size: 32px; }
-            .dot { width: 8px; height: 8px; }
-            .decoracao { font-size: 12px; letter-spacing: 4px; }
+            background: #f59e0b;
+            border-radius: 9999px;
         }
     </style>
 </head>
-<body>
+<body class="font-fredoka text-slate-800 min-h-full flex flex-col justify-between items-center p-3 sm:p-4 md:p-6 relative overflow-hidden">
 
-    <div id="elementos-container"></div>
+    <!-- Formas Abstratas de Fundo que casam com o Slide Deck -->
+    <div class="absolute w-40 h-40 bg-purple-300 rounded-full filter blur-xl opacity-25 -top-10 -left-10 pointer-events-none md:w-80 md:h-80"></div>
+    <div class="absolute w-52 h-52 bg-lime-300 rounded-full filter blur-xl opacity-35 -bottom-20 -right-20 pointer-events-none md:w-96 md:h-96"></div>
+    <div class="absolute w-32 h-32 bg-orange-400 rounded-full filter blur-lg opacity-20 bottom-1/3 -left-10 pointer-events-none"></div>
 
-    <header class="header">
-        <div class="header-inner">
-            <div class="header-botoes">
-                <button class="btn-musica" id="btnMusica" title="Música de fundo">🎵</button>
-                <button class="btn-fullscreen" id="btnFullscreen" title="Tela Cheia">⛶</button>
-            </div>
-            <a href="index.html" class="btn-voltar-dourado">← ✨ Voltar ao Reino ✨</a>
-        </div>
-    </header>
+    <!-- Div de Elementos Flutuantes -->
+    <div id="elementos-container" class="absolute inset-0 pointer-events-none overflow-hidden z-0"></div>
 
-    <div class="container">
-        <div class="banner-leitura">
-            <span class="emoji-banner">📚🌟✨</span>
-        </div>
+    <!-- Container Principal Unificado - Redesenhado como os slides -->
+    <div class="w-full max-w-4xl bg-white rounded-3xl md:rounded-[40px] shadow-2xl border-4 md:border-[12px] border-white relative flex flex-col overflow-hidden my-auto min-h-[530px] md:min-h-[590px] z-10">
         
-        <h1 class="titulo-reino">📚 Reino da Leitura</h1>
-        <p class="subtitulo-magico">Estante mágica com livros do Storybook! 🌟</p>
-
-        <!-- CARROSSEL -->
-        <div class="carousel-wrapper">
-            <button class="nav-btn" id="prevBtn" aria-label="Livros anteriores">◀</button>
-            
-            <div class="shelf-scroll" id="shelfScroll">
-                <!-- PRATELEIRA 1 -->
-                <div class="shelf" data-shelf="0">
-                    <a href="https://gemini.google.com/share/342f33f40cf9" target="_blank" class="book-spine color-1" data-audio="livro_1.mp3">
-                        <div class="book-title">Dyogo e o Jogo da Amizade</div>
-                        <div class="book-author">Storybook</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/13a8b8c55eea" target="_blank" class="book-spine color-2" data-audio="livro_2.mp3">
-                        <div class="book-title">Princesa Liora</div>
-                        <div class="book-author">Hingrid</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/b56dc78f3500" target="_blank" class="book-spine color-3" data-audio="livro_3.mp3">
-                        <div class="book-title">As Sereias e o Peixe Palhaço</div>
-                        <div class="book-author">Laura</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/8d58730a669e" target="_blank" class="book-spine color-4" data-audio="livro_4.mp3">
-                        <div class="book-title">Giovanna e a Sopa da Sabedoria</div>
-                        <div class="book-author">Storybook</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/c2aaf0eff3f6" target="_blank" class="book-spine color-5" data-audio="livro_5.mp3">
-                        <div class="book-title">Pietro, o Craque Leitor</div>
-                        <div class="book-author">Storybook</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/215147ed5227" target="_blank" class="book-spine color-6" data-audio="livro_6.mp3">
-                        <div class="book-title">Os 4 Porquinhos</div>
-                        <div class="book-author">Giovanna</div>
-                    </a>
-                </div>
-
-                <!-- PRATELEIRA 2 -->
-                <div class="shelf" data-shelf="1">
-                    <a href="https://gemini.google.com/share/08c96b93dce4" target="_blank" class="book-spine color-7" data-audio="livro_7.mp3">
-                        <div class="book-title">A Grande Fuga</div>
-                        <div class="book-author">Ednaldo</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/be5c031a6966" target="_blank" class="book-spine color-8" data-audio="livro_8.mp3">
-                        <div class="book-title">A Boneca Aurora</div>
-                        <div class="book-author">Ednaldo</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/36727271e8aa" target="_blank" class="book-spine color-9" data-audio="livro_9.mp3">
-                        <div class="book-title">O Desafio da União</div>
-                        <div class="book-author">Ednaldo</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/fa5bb0ec8c16" target="_blank" class="book-spine color-10" data-audio="livro_10.mp3">
-                        <div class="book-title">Joãozinho e Maria</div>
-                        <div class="book-author">Adap. Laura Mirian</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/785e10af194c" target="_blank" class="book-spine color-1" data-audio="livro_11.mp3">
-                        <div class="book-title">O Pão de Gengibre</div>
-                        <div class="book-author">Storybook</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/7e2e2769e9ac" target="_blank" class="book-spine color-2" data-audio="livro_12.mp3">
-                        <div class="book-title">A Semente da Coragem</div>
-                        <div class="book-author">Pietro Gabriel</div>
-                    </a>
-                </div>
-
-                <!-- PRATELEIRA 3 -->
-                <div class="shelf" data-shelf="2">
-                    <a href="https://gemini.google.com/share/990e39c7a68b" target="_blank" class="book-spine color-3" data-audio="livro_13.mp3">
-                        <div class="book-title">A Princesa e o Príncipe</div>
-                        <div class="book-author">Mirella</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/1c4dd6b9ef7c" target="_blank" class="book-spine color-4" data-audio="livro_14.mp3">
-                        <div class="book-title">Os Três Porquinhos</div>
-                        <div class="book-author">Adap. Ednaldo</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/bb81b8ba584b" target="_blank" class="book-spine color-5" data-audio="livro_15.mp3">
-                        <div class="book-title">A Serpente Arco-Íris</div>
-                        <div class="book-author">Mito Aborígene</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/7eddb04cd450" target="_blank" class="book-spine color-6" data-audio="livro_16.mp3">
-                        <div class="book-title">O Menino e o Cacho de Banana</div>
-                        <div class="book-author">Adap. Ednaldo</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/c45f362f88e1" target="_blank" class="book-spine color-7" data-audio="livro_17.mp3">
-                        <div class="book-title">A Viagem de Ravi ao Zoológico</div>
-                        <div class="book-author">Storybook</div>
-                    </a>
-                    <a href="https://gemini.google.com/share/ecfdeb67e122" target="_blank" class="book-spine color-8" data-audio="livro_18.mp3">
-                        <div class="book-title">Os Sons da Fazenda</div>
-                        <div class="book-author">Storybook</div>
-                    </a>
-                </div>
-
-                <!-- PRATELEIRA 4 (NOVA) -->
-                <div class="shelf" data-shelf="3">
-                    <a href="https://share.gemini.google/B2t0EWLHgki1" target="_blank" class="book-spine color-11" data-audio="livro_19.mp3">
-                        <div class="book-title">O Segredo do Vale Encantado</div>
-                        <div class="book-author">Storybook</div>
-                    </a>
-                    <!-- Espaço para mais livros no futuro -->
-                    <div class="book-spine" style="background: rgba(255,255,255,0.05); border: 2px dashed rgba(255,255,255,0.2); cursor: default; box-shadow: none;">
-                        <div class="book-title" style="color: rgba(255,255,255,0.3);">📖</div>
-                        <div class="book-author" style="opacity: 0.3;">Em breve...</div>
-                    </div>
-                    <div class="book-spine" style="background: rgba(255,255,255,0.05); border: 2px dashed rgba(255,255,255,0.2); cursor: default; box-shadow: none;">
-                        <div class="book-title" style="color: rgba(255,255,255,0.3);">📖</div>
-                        <div class="book-author" style="opacity: 0.3;">Em breve...</div>
-                    </div>
-                    <div class="book-spine" style="background: rgba(255,255,255,0.05); border: 2px dashed rgba(255,255,255,0.2); cursor: default; box-shadow: none;">
-                        <div class="book-title" style="color: rgba(255,255,255,0.3);">📖</div>
-                        <div class="book-author" style="opacity: 0.3;">Em breve...</div>
-                    </div>
-                    <div class="book-spine" style="background: rgba(255,255,255,0.05); border: 2px dashed rgba(255,255,255,0.2); cursor: default; box-shadow: none;">
-                        <div class="book-title" style="color: rgba(255,255,255,0.3);">📖</div>
-                        <div class="book-author" style="opacity: 0.3;">Em breve...</div>
-                    </div>
-                    <div class="book-spine" style="background: rgba(255,255,255,0.05); border: 2px dashed rgba(255,255,255,0.2); cursor: default; box-shadow: none;">
-                        <div class="book-title" style="color: rgba(255,255,255,0.3);">📖</div>
-                        <div class="book-author" style="opacity: 0.3;">Em breve...</div>
-                    </div>
-                </div>
+        <!-- Barra de Controle de Áudio Flexível (Identidade Visual do Cuquim) -->
+        <div class="w-full bg-orange-50/95 border-b border-orange-100 p-2 sm:p-3 flex flex-col sm:flex-row gap-2 items-center justify-between z-30">
+            <span class="text-orange-700 font-bold text-xs sm:text-sm flex items-center gap-1 cursor-pointer" onclick="speak(this.innerText)">
+                <i class="fa-solid fa-book-open-reader"></i> Reino da Leitura com o Cuquim!
+            </span>
+            <div class="flex gap-1.5 sm:gap-2">
+                <button id="musicBtn" onclick="toggleBackgroundMusic()" class="bg-orange-500 hover:bg-orange-600 active:translate-y-0.5 text-white text-[11px] sm:text-xs font-semibold py-1.5 px-3 rounded-full shadow-md transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-music"></i> <span id="musicText">Música 🎵</span>
+                </button>
+                <button id="narrationBtn" onclick="toggleAutoNarration()" class="bg-emerald-500 hover:bg-emerald-600 active:translate-y-0.5 text-white text-[11px] sm:text-xs font-semibold py-1.5 px-3 rounded-full shadow-md transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-volume-high"></i> <span id="narrationText">Leitura Ativa (Auto)</span>
+                </button>
             </div>
-
-            <button class="nav-btn" id="nextBtn" aria-label="Próximos livros">▶</button>
         </div>
 
-        <!-- Indicador de páginas -->
-        <div class="page-indicator" id="pageIndicator"></div>
+        <!-- Área Interna de Leitura -->
+        <div class="flex-1 flex flex-col justify-between items-center p-4 sm:p-5 md:p-8 z-10 w-full relative">
+            
+            <!-- Banner Infantil e Títulos -->
+            <div class="text-center space-y-1 mb-3">
+                <div class="inline-flex bg-orange-100 text-orange-600 text-3xl sm:text-4xl p-2.5 rounded-2xl shadow-inner pulse-soft border-2 border-orange-200">
+                    📚🌟✨
+                </div>
+                <h1 class="font-comfortaa font-bold text-2xl sm:text-3xl text-orange-500 cursor-pointer drop-shadow-sm" onclick="speak(this.innerText)">
+                    Reino da Leitura!
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-500 max-w-md font-medium" onclick="speak(this.innerText)">
+                    Estante mágica de livros para o Emerson navegar com seus amigos! 📖🎈
+                </p>
+            </div>
 
-        <div class="decoracao">📚 ✨ 🌟 🏰 📖 🌙</div>
+            <!-- CARROSSEL DE PRATELEIRAS CARTOON -->
+            <div class="w-full flex items-center gap-1.5 sm:gap-3 flex-1 min-h-[220px]">
+                
+                <!-- Botão Prateleira Anterior -->
+                <button id="prevBtn" onclick="prevPage()" class="cartoon-button-sky bg-sky-500 text-white w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-sm font-bold shadow-md transition-all disabled:opacity-30 disabled:pointer-events-none" disabled>
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <!-- Área Central do Scroll de Prateleiras -->
+                <div class="flex-1 overflow-x-auto overflow-y-hidden scroll-behavior-smooth flex gap-4 p-2 sm:p-3 shelf-scroll scroll-snap-type-x" id="shelfScroll">
+                    
+                    <!-- PRATELEIRA 1 -->
+                    <div class="flex-shrink-0 w-full bg-amber-50 rounded-2xl p-3 border-4 border-amber-200 flex flex-col justify-between relative min-h-[190px]">
+                        <!-- Trilho de Madeira Cartoon -->
+                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 flex-1 mb-2">
+                            
+                            <a href="https://share.gemini.google/B2t0EWLHgki1" target="_blank" class="book-spine bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="A Sinfonia do Silêncio de Ferro. Escrito por Everton José Batista da Silva.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">A Sinfonia do Silêncio de Ferro</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Everton José</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/342f33f40cf9" target="_blank" class="book-spine bg-gradient-to-br from-red-400 to-red-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="Dyogo e o Jogo da Amizade.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">Dyogo e o Jogo da Amizade</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Storybook</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/13a8b8c55eea" target="_blank" class="book-spine bg-gradient-to-br from-sky-400 to-sky-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="Princesa Liora.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">Princesa Liora</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Hingrid</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/b56dc78f3500" target="_blank" class="book-spine bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="As Sereias e o Peixe Palhaço.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">As Sereias e o Peixe Palhaço</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Laura</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/8d58730a669e" target="_blank" class="book-spine bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="Giovanna e a Sopa da Sabedoria.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">Giovanna e a Sopa da Sabedoria</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Storybook</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/c2aaf0eff3f6" target="_blank" class="book-spine bg-gradient-to-br from-pink-400 to-pink-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="Pietro, o Craque Leitor.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">Pietro, o Craque Leitor</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Storybook</div>
+                            </a>
+
+                        </div>
+                        <!-- Base da Estante Fofa de Madeira -->
+                        <div class="h-3.5 w-full bg-amber-600 rounded-full border-b-4 border-amber-800 shadow-md"></div>
+                    </div>
+
+                    <!-- PRATELEIRA 2 -->
+                    <div class="flex-shrink-0 w-full bg-amber-50 rounded-2xl p-3 border-4 border-amber-200 flex flex-col justify-between relative min-h-[190px]">
+                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 flex-1 mb-2">
+                            
+                            <a href="https://gemini.google.com/share/215147ed5227" target="_blank" class="book-spine bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="Os Quatro Porquinhos.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">Os 4 Porquinhos</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Giovanna</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/08c96b93dce4" target="_blank" class="book-spine bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="A Grande Fuga.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">A Grande Fuga</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Ednaldo</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/be5c031a6966" target="_blank" class="book-spine bg-gradient-to-br from-violet-400 to-violet-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="A Boneca Aurora.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">A Boneca Aurora</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Ednaldo</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/36727271e8aa" target="_blank" class="book-spine bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="O Desafio da União.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">O Desafio da União</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Ednaldo</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/fa5bb0ec8c16" target="_blank" class="book-spine bg-gradient-to-br from-rose-400 to-rose-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="Joãozinho e Maria.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">Joãozinho e Maria</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Laura M.</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/785e10af194c" target="_blank" class="book-spine bg-gradient-to-br from-teal-400 to-teal-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="O Pão de Gengibre.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">O Pão de Gengibre</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Storybook</div>
+                            </a>
+
+                        </div>
+                        <div class="h-3.5 w-full bg-amber-600 rounded-full border-b-4 border-amber-800 shadow-md"></div>
+                    </div>
+
+                    <!-- PRATELEIRA 3 -->
+                    <div class="flex-shrink-0 w-full bg-amber-50 rounded-2xl p-3 border-4 border-amber-200 flex flex-col justify-between relative min-h-[190px]">
+                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 flex-1 mb-2">
+                            
+                            <a href="https://gemini.google.com/share/7e2e2769e9ac" target="_blank" class="book-spine bg-gradient-to-br from-lime-400 to-lime-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="A Semente da Coragem.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">A Semente da Coragem</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Pietro G.</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/990e39c7a68b" target="_blank" class="book-spine bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="A Princesa e o Príncipe.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">A Princesa e o Príncipe</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Mirella</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/1c4dd6b9ef7c" target="_blank" class="book-spine bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="Os Três Porquinhos.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">Os Três Porquinhos</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Ednaldo</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/bb81b8ba584b" target="_blank" class="book-spine bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="A Serpente Arco Íris.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">A Serpente Arco-Íris</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Mito Abor.</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/7eddb04cd450" target="_blank" class="book-spine bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="O Menino e o Cacho de Banana.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">O Menino e o Cacho de Banana</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Ednaldo</div>
+                            </a>
+
+                            <a href="https://gemini.google.com/share/c45f362f88e1" target="_blank" class="book-spine bg-gradient-to-br from-sky-400 to-sky-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="A Viagem de Ravi ao Zoológico.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">A Viagem de Ravi ao Zoológico</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Storybook</div>
+                            </a>
+
+                        </div>
+                        <div class="h-3.5 w-full bg-amber-600 rounded-full border-b-4 border-amber-800 shadow-md"></div>
+                    </div>
+
+                    <!-- PRATELEIRA 4 -->
+                    <div class="flex-shrink-0 w-full bg-amber-50 rounded-2xl p-3 border-4 border-amber-200 flex flex-col justify-between relative min-h-[190px]">
+                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 flex-1 mb-2">
+                            
+                            <a href="https://gemini.google.com/share/ecfdeb67e122" target="_blank" class="book-spine bg-gradient-to-br from-green-400 to-green-600 rounded-lg p-2 flex flex-col justify-between text-white border-l-4 border-black/15 text-center cursor-pointer h-36 relative overflow-hidden" data-audio="Os Sons da Fazenda.">
+                                <div class="text-[9px] sm:text-[10px] font-bold line-clamp-4 leading-tight">Os Sons da Fazenda</div>
+                                <div class="text-[7px] sm:text-[8px] bg-black/20 py-0.5 rounded opacity-90 truncate">Storybook</div>
+                            </a>
+
+                            <!-- Em breve slot 1 -->
+                            <div class="bg-amber-100/40 rounded-lg p-2 flex flex-col justify-center items-center text-amber-900/30 border-2 border-dashed border-amber-300 h-36 select-none">
+                                <span class="text-xl">📖</span>
+                                <span class="text-[8px] mt-1 font-semibold text-center leading-none">Novos Livros</span>
+                            </div>
+
+                            <!-- Em breve slot 2 -->
+                            <div class="bg-amber-100/40 rounded-lg p-2 flex flex-col justify-center items-center text-amber-900/30 border-2 border-dashed border-amber-300 h-36 select-none">
+                                <span class="text-xl">📖</span>
+                                <span class="text-[8px] mt-1 font-semibold text-center leading-none">Novos Livros</span>
+                            </div>
+
+                            <!-- Em breve slot 3 -->
+                            <div class="bg-amber-100/40 rounded-lg p-2 flex flex-col justify-center items-center text-amber-900/30 border-2 border-dashed border-amber-300 h-36 select-none">
+                                <span class="text-xl">📖</span>
+                                <span class="text-[8px] mt-1 font-semibold text-center leading-none">Novos Livros</span>
+                            </div>
+
+                            <!-- Em breve slot 4 -->
+                            <div class="bg-amber-100/40 rounded-lg p-2 flex flex-col justify-center items-center text-amber-900/30 border-2 border-dashed border-amber-300 h-36 select-none">
+                                <span class="text-xl">📖</span>
+                                <span class="text-[8px] mt-1 font-semibold text-center leading-none">Novos Livros</span>
+                            </div>
+
+                            <!-- Em breve slot 5 -->
+                            <div class="bg-amber-100/40 rounded-lg p-2 flex flex-col justify-center items-center text-amber-900/30 border-2 border-dashed border-amber-300 h-36 select-none">
+                                <span class="text-xl">📖</span>
+                                <span class="text-[8px] mt-1 font-semibold text-center leading-none">Novos Livros</span>
+                            </div>
+
+                        </div>
+                        <div class="h-3.5 w-full bg-amber-600 rounded-full border-b-4 border-amber-800 shadow-md"></div>
+                    </div>
+
+                </div>
+
+                <!-- Botão Prateleira Seguinte -->
+                <button id="nextBtn" onclick="nextPage()" class="cartoon-button-sky bg-sky-500 text-white w-9 h-9 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-sm font-bold shadow-md transition-all">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+            </div>
+
+            <!-- Indicador de Páginas / Prateleiras -->
+            <div class="page-indicator flex justify-center gap-1.5 sm:gap-2 mt-3 mb-1" id="pageIndicator"></div>
+
+            <div class="text-[11px] sm:text-xs text-amber-700/60 font-semibold select-none flex items-center gap-1">
+                📚 ✨ Toque em um livro para ouvi-lo e abri-lo! ✨ 🌟
+            </div>
+
+        </div>
+
+        <!-- Barra de Navegação Inferior Otimizada -->
+        <div class="w-full bg-slate-50 border-t border-slate-100 p-3 flex justify-between items-center z-25 mt-auto">
+            <a href="index.html" class="inline-block">
+                <button class="cartoon-button-sky bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 px-5 sm:px-7 rounded-full text-xs sm:text-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-graduation-cap"></i> Voltar à Matemática
+                </button>
+            </a>
+            <span class="text-[10px] sm:text-xs font-bold text-orange-500/80 uppercase tracking-widest font-comfortaa">Storybook 🏰</span>
+        </div>
+
+    </div>
+
+    <!-- Rodapé Visual -->
+    <div class="mt-3 text-[10px] sm:text-xs text-center font-bold text-amber-900/80 cursor-pointer drop-shadow-sm select-none" onclick="speak(this.innerText)">
+        &copy; 2024 Emerson @2024 - Uma Aventura de Aprendizagem Realizada com Amor! ❤️
     </div>
 
     <script>
-        // ========== CARROSSEL ==========
+        // 1. CARROSSEL DE PRATELEIRAS
         const scrollContainer = document.getElementById('shelfScroll');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const indicator = document.getElementById('pageIndicator');
         let currentPage = 0;
-        let totalPages = 0;
-
+        let totalPages = 4; // 4 prateleiras definidas
+        
         function updateCarousel() {
-            const shelves = document.querySelectorAll('.shelf');
-            totalPages = shelves.length;
+            if (scrollContainer.clientWidth === 0) return;
             
-            if (totalPages === 0) return;
+            totalPages = document.querySelectorAll('#shelfScroll > div').length;
 
-            // Atualiza indicador
+            // Desenha os pontinhos indicadores
             indicator.innerHTML = '';
             for (let i = 0; i < totalPages; i++) {
                 const dot = document.createElement('div');
-                dot.className = 'dot' + (i === currentPage ? ' active' : '');
-                dot.dataset.index = i;
+                dot.className = 'w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full border border-amber-300 transition-all cursor-pointer ' + 
+                                (i === currentPage ? 'bg-amber-500 scale-125 shadow-sm' : 'bg-amber-100');
                 dot.addEventListener('click', () => goToPage(i));
                 indicator.appendChild(dot);
             }
 
-            // Scroll para a página atual
+            // Realiza scroll para a prateleira correta
             const targetScroll = currentPage * scrollContainer.clientWidth;
             scrollContainer.scrollTo({ left: targetScroll, behavior: 'smooth' });
 
-            // Atualiza botões
+            // Trata estados de botões
             prevBtn.disabled = currentPage === 0;
             nextBtn.disabled = currentPage >= totalPages - 1;
         }
@@ -695,7 +401,7 @@
             if (page < 0 || page >= totalPages) return;
             currentPage = page;
             updateCarousel();
-            tocarSom('virar_pagina.mp3');
+            speak("Prateleira " + (currentPage + 1));
         }
 
         function nextPage() {
@@ -710,237 +416,259 @@
             }
         }
 
-        // Detecta scroll manual
+        // Evento de Scroll Dinâmico manual por gestos de arrastar
         scrollContainer.addEventListener('scroll', () => {
             const pageWidth = scrollContainer.clientWidth;
             if (pageWidth === 0) return;
             const newPage = Math.round(scrollContainer.scrollLeft / pageWidth);
             if (newPage !== currentPage && newPage < totalPages) {
                 currentPage = newPage;
-                document.querySelectorAll('.dot').forEach((dot, i) => {
-                    dot.classList.toggle('active', i === currentPage);
-                });
-                prevBtn.disabled = currentPage === 0;
-                nextBtn.disabled = currentPage >= totalPages - 1;
+                updateCarousel();
             }
         });
 
+        // Evento de redimensionamento da janela de forma otimizada
         let resizeTimeout;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                updateCarousel();
-            }, 200);
+            resizeTimeout = setTimeout(updateCarousel, 150);
         });
 
-        // ========== MÚSICA DE FUNDO ==========
-        let musicaFundo = null;
-        let musicaAtiva = false;
-        let audioAtivado = false;
-        let somAtual = null;
-        
-        function tocarSom(arquivo) {
-            if (!audioAtivado) return;
-            if (!arquivo) return;
+        // 2. SISTEMA DE LEITURA ATIVA / VOZ (TTS)
+        let autoNarration = true;
+        let isAudioUnlocked = true; // Liberado por padrão, adaptando do slide anterior
+        let isSpeaking = false;
+
+        function speak(text) {
+            if (!isAudioUnlocked) return;
             try {
-                if (somAtual) {
-                    somAtual.pause();
-                    somAtual.currentTime = 0;
+                if (!window.speechSynthesis) return;
+                
+                window.speechSynthesis.cancel(); // Evita gargalos
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'pt-BR';
+                utterance.rate = 1.05;
+                utterance.pitch = 1.25;
+
+                if (typeof window.speechSynthesis.getVoices === 'function') {
+                    const voices = window.speechSynthesis.getVoices();
+                    const ptVoice = voices.find(v => v.lang.toLowerCase().includes('pt'));
+                    if (ptVoice) utterance.voice = ptVoice;
                 }
-                somAtual = new Audio(arquivo);
-                somAtual.play().catch(e => console.log('Áudio:', e));
-            } catch(e) { console.log('Erro no áudio:', e); }
-        }
-        
-        function ativarSons() {
-            if (audioAtivado) return;
-            audioAtivado = true;
-            confetti({ 
-                particleCount: 80, 
-                spread: 70, 
-                origin: { y: 0.5 }, 
-                colors: ['#d4a843', '#fff', '#ff6b35', '#4D96FF', '#9B5DE5'] 
-            });
-        }
-        
-        function toggleMusica() {
-            if (!audioAtivado) {
-                ativarSons();
-                setTimeout(toggleMusica, 100);
-                return;
+
+                utterance.onstart = () => {
+                    isSpeaking = true;
+                    adjustMusicVolume(0.008); // Ducking
+                };
+
+                utterance.onend = () => {
+                    isSpeaking = false;
+                    adjustMusicVolume(0.03); // Normaliza
+                };
+
+                utterance.onerror = (e) => {
+                    if (e.error !== 'interrupted' && e.error !== 'canceled') {
+                        console.warn(e.error);
+                    }
+                    isSpeaking = false;
+                    adjustMusicVolume(0.03);
+                };
+
+                window.speechSynthesis.speak(utterance);
+            } catch (error) {
+                console.warn(error);
+                isSpeaking = false;
+                adjustMusicVolume(0.03);
             }
+        }
+
+        function toggleAutoNarration() {
+            autoNarration = !autoNarration;
+            const btn = document.getElementById('narrationBtn');
+            const text = document.getElementById('narrationText');
             
-            const btn = document.getElementById('btnMusica');
-            if (!musicaFundo) {
-                musicaFundo = new Audio('som.mp3');
-                musicaFundo.loop = true;
-                musicaFundo.volume = 0.3;
-            }
-            if (musicaAtiva) {
-                musicaFundo.pause();
-                musicaAtiva = false;
-                btn.classList.remove('ativo');
-                btn.innerHTML = '🎵';
+            if (autoNarration) {
+                btn.className = "bg-emerald-500 hover:bg-emerald-600 active:translate-y-0.5 text-white text-[11px] sm:text-xs font-semibold py-1.5 px-3 rounded-full shadow-md transition-all flex items-center gap-1.5";
+                text.innerText = "Leitura Ativa (Auto)";
+                speak("Leitura automática ativada!");
             } else {
-                musicaFundo.play().catch(e => console.log('Música:', e));
-                musicaAtiva = true;
-                btn.classList.add('ativo');
-                btn.innerHTML = '🎵';
+                btn.className = "bg-slate-400 hover:bg-slate-500 active:translate-y-0.5 text-white text-[11px] sm:text-xs font-semibold py-1.5 px-3 rounded-full shadow-md transition-all flex items-center gap-1.5";
+                text.innerText = "Leitura Silenciada";
+                if (window.speechSynthesis) window.speechSynthesis.cancel();
             }
         }
-        
-        // ========== CONFIGURAR LIVROS ==========
-        function configurarLivros() {
-            const livros = document.querySelectorAll('.book-spine:not([style*="dashed"])');
-            
-            livros.forEach(livro => {
-                const audioDescritivo = livro.getAttribute('data-audio');
-                
-                livro.addEventListener('mouseenter', () => {
-                    if (audioDescritivo) tocarSom(audioDescritivo);
-                });
-                
-                livro.addEventListener('touchstart', (e) => {
-                    if (audioDescritivo) tocarSom(audioDescritivo);
-                }, { passive: true });
-                
-                livro.addEventListener('click', (e) => {
-                    if (!audioAtivado) ativarSons();
-                    tocarSom('clique_magico.mp3');
-                });
-            });
-        }
-        
-        // ========== FULLSCREEN ==========
-        const FS_KEY = 'reinoFullscreen';
-        
-        function isFullscreen() {
-            return !!(document.fullscreenElement || document.webkitFullscreenElement);
-        }
-        
-        function enterFullscreen() {
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) elem.requestFullscreen().catch(() => {});
-            else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-        }
-        
-        function exitFullscreen() {
-            if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-        }
-        
-        function toggleFullscreen() {
-            if (isFullscreen()) {
-                exitFullscreen();
-                localStorage.setItem(FS_KEY, 'false');
-            } else {
-                enterFullscreen();
-                localStorage.setItem(FS_KEY, 'true');
-                if (audioAtivado) confetti({ 
-                    particleCount: 40, 
-                    spread: 60, 
-                    origin: { y: 0.2 }, 
-                    colors: ['#d4a843', '#fff', '#4D96FF'] 
-                });
-            }
-            atualizarIconeFullscreen();
-        }
-        
-        function atualizarIconeFullscreen() {
-            const btn = document.getElementById('btnFullscreen');
-            if (isFullscreen()) {
-                btn.innerHTML = '✖';
-                btn.classList.add('ativo');
-            } else {
-                btn.innerHTML = '⛶';
-                btn.classList.remove('ativo');
+
+        // 3. CAIXINHA DE MÚSICA DE FUNDO PROCEDURAL (WEB AUDIO API)
+        let audioCtx = null;
+        let isMusicPlaying = false;
+        let melodyTimeout = null;
+        let currentGainNode = null;
+        let baseVolume = 0.03;
+
+        function adjustMusicVolume(targetVolume) {
+            if (currentGainNode && audioCtx) {
+                try {
+                    currentGainNode.gain.setValueAtTime(currentGainNode.gain.value, audioCtx.currentTime);
+                    currentGainNode.gain.exponentialRampToValueAtTime(targetVolume, audioCtx.currentTime + 0.3);
+                } catch (e) {
+                    currentGainNode.gain.value = targetVolume;
+                }
             }
         }
-        
-        function setupFullscreenListeners() {
-            const events = ['fullscreenchange', 'webkitfullscreenchange'];
-            events.forEach(event => {
-                document.addEventListener(event, () => {
-                    atualizarIconeFullscreen();
-                    if (!isFullscreen()) localStorage.setItem(FS_KEY, 'false');
-                });
-            });
-        }
-        
-        function restaurarFullscreen() {
-            const deveFullscreen = localStorage.getItem(FS_KEY) === 'true';
-            if (deveFullscreen && !isFullscreen()) {
-                setTimeout(() => enterFullscreen(), 100);
+
+        function toggleBackgroundMusic() {
+            const btn = document.getElementById('musicBtn');
+            const text = document.getElementById('musicText');
+
+            try {
+                if (!audioCtx) {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContextClass) audioCtx = new AudioContextClass();
+                }
+
+                isMusicPlaying = !isMusicPlaying;
+
+                if (isMusicPlaying) {
+                    btn.className = "bg-red-500 hover:bg-red-600 active:translate-y-0.5 text-white text-[11px] sm:text-xs font-semibold py-1.5 px-3 rounded-full shadow-md transition-all flex items-center gap-1.5";
+                    text.innerText = "Parar Música ⏸️";
+                    if (audioCtx.state === 'suspended') {
+                        audioCtx.resume();
+                    }
+                    playKindergartenMelody();
+                } else {
+                    btn.className = "bg-orange-500 hover:bg-orange-600 active:translate-y-0.5 text-white text-[11px] sm:text-xs font-semibold py-1.5 px-3 rounded-full shadow-md transition-all flex items-center gap-1.5";
+                    text.innerText = "Música 🎵";
+                    if (melodyTimeout) {
+                        clearTimeout(melodyTimeout);
+                        melodyTimeout = null;
+                    }
+                }
+            } catch (error) {
+                console.error(error);
             }
-            atualizarIconeFullscreen();
         }
-        
-        // ========== ELEMENTOS FLUTUANTES ==========
+
+        function playKindergartenMelody() {
+            if (!isMusicPlaying) return;
+            if (melodyTimeout) clearTimeout(melodyTimeout);
+
+            // Escala musical alegre e infantil (Dó maior)
+            const notes = [523.25, 587.33, 659.25, 783.99, 880.00, 783.99, 659.25, 587.33];
+            const durations = [0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8];
+            let noteIdx = 0;
+
+            function playNext() {
+                if (!isMusicPlaying) return;
+
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gainNode = audioCtx.createGain();
+                    currentGainNode = gainNode;
+                    
+                    osc.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+
+                    osc.type = 'sine'; // Timbre sino infantil puro
+                    osc.frequency.setValueAtTime(notes[noteIdx], audioCtx.currentTime);
+
+                    const activeVolume = isSpeaking ? 0.008 : baseVolume;
+
+                    gainNode.gain.setValueAtTime(0.001, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(activeVolume, audioCtx.currentTime + 0.12);
+                    gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + durations[noteIdx] - 0.05);
+
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + durations[noteIdx]);
+                } catch (err) {
+                    console.error(err);
+                }
+
+                let nextInterval = durations[noteIdx] * 1000;
+                noteIdx = (noteIdx + 1) % notes.length;
+                melodyTimeout = setTimeout(playNext, nextInterval);
+            }
+
+            playNext();
+        }
+
+        // 4. ELEMENTOS FLUTUANTES INFANTIS
         function criarElementosFlutuantes() {
             const container = document.getElementById('elementos-container');
-            const elementos = ['📚', '✨', '🌟', '📖', '🏰', '💫', '⭐', '🌈'];
-            const cores = ['#d4a843', '#ff6b35', '#4D96FF', '#9B5DE5', '#FF6B6B', '#00F5D4'];
+            const elementos = ['📚', '🎈', '✨', '⭐', '🦁', '🍎', '🏖️', '🍭'];
             
             function adicionarElemento() {
                 const c = document.createElement('div');
                 c.className = 'elemento-flutuante';
                 c.innerText = elementos[Math.floor(Math.random() * elementos.length)];
                 c.style.left = Math.random() * 100 + '%';
-                c.style.fontSize = (Math.random() * 18 + 12) + 'px';
-                c.style.color = cores[Math.floor(Math.random() * cores.length)];
-                c.style.animationDuration = (Math.random() * 7 + 5) + 's';
+                c.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                c.style.animationDuration = (Math.random() * 8 + 6) + 's';
                 container.appendChild(c);
-                setTimeout(() => c.remove(), 12000);
+                setTimeout(() => c.remove(), 14000);
             }
             
-            for (let i = 0; i < 18; i++) {
+            // Inicia alguns imediatamente
+            for (let i = 0; i < 10; i++) {
                 setTimeout(adicionarElemento, i * 400);
             }
-            setInterval(adicionarElemento, 3000);
+            setInterval(adicionarElemento, 3200);
         }
-        
-        // ========== CONFETES INICIAIS ==========
-        function lancarFestaMagica() {
-            setTimeout(() => {
-                confetti({
-                    particleCount: 60,
-                    spread: 90,
-                    origin: { y: 0.6 },
-                    colors: ['#d4a843', '#ff6b35', '#4D96FF', '#f5c64a', '#fff', '#9B5DE5'],
-                    shapes: ['circle', 'square'],
-                    scalar: 1.0
+
+        // 5. CONFIGURAÇÃO DE EVENTOS DOS LIVROS
+        function configurarLivros() {
+            const livros = document.querySelectorAll('.book-spine');
+            
+            livros.forEach(livro => {
+                const audioDescritivo = livro.getAttribute('data-audio');
+                
+                // Leitura do livro ao passar o mouse ou focar
+                livro.addEventListener('mouseenter', () => {
+                    if (autoNarration && audioDescritivo) {
+                        speak(audioDescritivo);
+                    }
                 });
-            }, 500);
+
+                livro.addEventListener('touchstart', () => {
+                    if (autoNarration && audioDescritivo) {
+                        speak(audioDescritivo);
+                    }
+                }, { passive: true });
+
+                // Festa de confetti e áudio de clique ao selecionar
+                livro.addEventListener('click', (e) => {
+                    confetti({ 
+                        particleCount: 50, 
+                        spread: 60, 
+                        origin: { y: 0.6 },
+                        colors: ['#38bdf8', '#34d399', '#f43f5e', '#fbbf24', '#c084fc']
+                    });
+                });
+            });
         }
-        
-        // ========== INICIALIZAÇÃO ==========
+
+        // 6. INICIALIZADOR COMPLETO
         window.onload = function() {
             criarElementosFlutuantes();
-            lancarFestaMagica();
             configurarLivros();
-            setupFullscreenListeners();
-            restaurarFullscreen();
             
-            document.getElementById('btnMusica').addEventListener('click', toggleMusica);
-            document.getElementById('btnFullscreen').addEventListener('click', toggleFullscreen);
-            
-            prevBtn.addEventListener('click', prevPage);
-            nextBtn.addEventListener('click', nextPage);
-            
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft') prevPage();
-                if (e.key === 'ArrowRight') nextPage();
-            });
-            
-            setTimeout(updateCarousel, 100);
-            
-            const ativarPrimeiraInteracao = () => {
-                if (!audioAtivado) ativarSons();
-                document.removeEventListener('click', ativarPrimeiraInteracao);
-                document.removeEventListener('touchstart', ativarPrimeiraInteracao);
+            // Primeira leitura de boas-vindas
+            setTimeout(() => {
+                updateCarousel();
+                speak("Bem-vindo ao Reino da Leitura, Emerson! Toque nas prateleiras e nos livros para começar a ler.");
+                // Tenta ligar a musiquinha de fundo
+                toggleBackgroundMusic();
+            }, 500);
+
+            // Resgata o clique global para liberar áudio
+            const unlockHandler = () => {
+                isAudioUnlocked = true;
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                document.removeEventListener('click', unlockHandler);
             };
-            document.addEventListener('click', ativarPrimeiraInteracao);
-            document.addEventListener('touchstart', ativarPrimeiraInteracao);
+            document.addEventListener('click', unlockHandler);
         };
     </script>
 </body>
